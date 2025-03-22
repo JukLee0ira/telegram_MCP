@@ -1,16 +1,26 @@
 {
-  "name": "telegram_mcp",
+  "name": "telegram-mcp",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Telegram MCP 服务器，允许 LLM 与 Telegram 聊天交互",
+  "main": "build/index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "start": "node dist/telegram.js",
+    "dev": "tsc -w"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.2.0",
+    "dotenv": "^16.4.1",
+    "grammy": "^1.15.3",
+    "zod": "^3.22.4",
+    "https-proxy-agent": "^7.0.6"
+  },
   "devDependencies": {
-    "typescript": "^5.8.2"
+    "@types/node": "^20.11.16",
+    "typescript": "^5.3.3"
   }
 }
