@@ -1,171 +1,131 @@
 # Telegram MCP Server
 
-一个模型上下文协议(MCP)服务器，使 LLMs 能够与 Telegram 聊天进行交互，允许它们通过 Telegram API 发送和读取消息。使用此服务器，像 Claude 这样的 LLM 可以直接与 Telegram 聊天进行交互，同时保持用户控制和安全性。
+A Model Context Protocol (MCP) server allows Large Language Models (LLMs) to interact with Telegram chats. It enables them to send and read messages through the Telegram API. With this server, LLMs like Claude can directly interact with Telegram chats while ensuring user control and security.
 
-## 功能特点
+## Features
 
-- 发送消息到 Telegram 聊天
-- 从聊天中读取最近消息
-- 支持私人聊天和群组聊天
-- 完善的错误处理和验证机制
+- Send messages to Telegram chats.
+- Read recent messages from chats.
+- Complete error handling and validation mechanisms.
 
-## 前置要求
+## Prerequisites
 
-- Node.js 16.x 或更高版本
-- Telegram Bot Token (从 @BotFather 获取)
-- 确保机器人具有以下权限：
-  - 读取消息
-  - 发送消息
-  - 编辑消息
-  - 删除消息（可选）
+- Node.js version 16.x or higher.
+- Telegram Bot Token (obtain from @BotFather).
+- Ensure the bot has joined the groups you want to interact with and has admin permissions.
 
-## 安装设置
+## Installation Setup
 
-1. 克隆仓库:
+1. Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/telegrammcp.git
-cd telegrammcp
+git clone https://github.com/JukLee0ira/telegram_MCP.git
+cd telegram_MCP
 ```
 
-2. 安装依赖:
+2. Install dependencies:
 
 ```bash
 npm install
 ```
 
-3. 在根目录创建 `.env` 文件:
+3. Create a `.env` file in the root directory and fill in your bot_token here:
 
 ```
 TELEGRAM_BOT_TOKEN=your_telegram_bot_token_here
 ```
 
-4. 构建服务器:
+4. Build the server:
 
 ```bash
 npm run build
 ```
 
-## 与 Claude Desktop 集成
+## Integration with Cursor
 
-1. 打开 Claude Desktop 配置文件:
-
-   - macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
-   - Windows: `%APPDATA%\Claude\claude_desktop_config.json`
-
-2. 添加 Telegram MCP 服务器配置:
+1. Add the following MCP server configuration in the `.cursor\mcp.json` file and save it:
 
 ```json
 {
   "mcpServers": {
     "telegram": {
-      "command": "node",
-      "args": ["path/to/telegrammcp/build/index.js"],
-      "env": {
-        "TELEGRAM_BOT_TOKEN": "your_telegram_bot_token_here"
-      }
+      "command": "cmd",
+      "args": ["/c", "node", "C:/Users/tmp29/telegram_mcp/dist/telegram.js"]
     }
   }
 }
 ```
 
-3. 重启 Claude Desktop
+2. Restart Cursor.
 
-## 可用工具
+## Available Tools
 
 ### send-message
 
-发送消息到指定的 Telegram 聊天。
+Send a message to a specified Telegram chat.
 
-参数:
+Parameters:
 
-- `chat_id`: 聊天 ID（数字）或用户名（字符串）
-- `message`: 要发送的消息内容
-- `reply_to_message_id` (可选): 要回复的消息 ID
+- `chat`: Group name
+- `message`: The content of the message to send
 
-示例:
+Example:
 
 ```json
 {
-  "chat_id": "@username",
-  "message": "来自 MCP 的问候！"
+  "chat": "general",
+  "message": "Greetings from MCP!"
 }
 ```
 
 ### read-messages
 
-读取指定聊天的最近消息。
+Read the recent messages from a specified chat.
 
-参数:
+Parameters:
 
-- `chat_id`: 聊天 ID（数字）或用户名（字符串）
-- `limit` (可选): 获取的消息数量（默认: 50, 最大: 100）
+- `chat`: Group name
+- `limit` (optional): Number of messages to retrieve (default: 50, maximum: 1000)
 
-示例:
+Example:
 
 ```json
 {
-  "chat_id": "-100123456789",
+  "chat_id": "general",
   "limit": 10
 }
 ```
 
-## 开发
+## Testing
 
-1. 安装开发依赖:
-
-```bash
-npm install --save-dev typescript @types/node
-```
-
-2. 以开发模式启动服务器:
-
-```bash
-npm run dev
-```
-
-## 测试
-
-使用 MCP Inspector 测试服务器:
+Use MCP Inspector to test the server:
 
 ```bash
 npx @modelcontextprotocol/inspector node build/index.js
 ```
 
-## 使用示例
+## Usage Examples
 
-以下是一些可以在设置完 Telegram MCP 服务器后尝试的交互示例：
+Here are some interaction examples you can try after setting up the Telegram MCP server:
 
-1. "能否读取与@username 的最后 5 条消息？"
-2. "请在群组中发送消息'会议将在 10 分钟后开始'"
-3. "查看开发频道关于最新版本的最近讨论"
+1. "Can you read the last 5 messages with @username?"
+2. "Please send the message 'The meeting will start in 10 minutes' in the group."
+3. "Check the recent discussions in the development channel about the latest version."
 
-Claude 将使用适当的工具与 Telegram 交互，并在发送任何消息前征求您的同意。
+Cursor will use the appropriate tools to interact with Telegram and will ask for your consent before sending any messages.
 
-## 安全注意事项
+## Safety Notes
 
-- 机器人需要适当的 Telegram 权限才能运行
-- 所有消息发送操作都需要明确的用户批准
-- 环境变量应妥善保护
-- Token 永远不要提交到版本控制系统
-- 聊天访问仅限于机器人被授权的聊天
+- The bot needs proper Telegram permissions to run.
+- All message sending operations require explicit user approval.
+- Environment variables should be properly protected.
+- Tokens should never be submitted to version control systems.
+- Chat access is limited to chats authorized for the bot.
 
-## 贡献指南
+## Support
 
-1. Fork 仓库
-2. 创建功能分支 (`git checkout -b feature/amazing-feature`)
-3. 提交更改 (`git commit -m '添加某个很棒的功能'`)
-4. 推送到分支 (`git push origin feature/amazing-feature`)
-5. 创建 Pull Request
+If you encounter problems or have questions:
 
-## 许可证
-
-本项目采用 MIT 许可证 - 详见 [LICENSE](LICENSE) 文件。
-
-## 支持
-
-如果遇到问题或有疑问：
-
-1. 查看 GitHub Issues 区域
-2. 查阅 MCP 文档：https://modelcontextprotocol.io
-3. 提供详细复现步骤创建新的 issue
+1. Check the GitHub Issues section.
+2. Refer to the MCP documentation: https://modelcontextprotocol.io
+3. Provide detailed reproduction steps to create a new issue.
