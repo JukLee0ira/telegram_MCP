@@ -85,7 +85,7 @@ const server = new Server(
   }
 );
 
-// 列出可用工具
+// list the available tools
 server.setRequestHandler(ListToolsRequestSchema, async () => {
   return {
     tools: [
@@ -157,8 +157,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         // get the messages from the cache
         const cachedMessages = Array.from(messageCache.values())
           .filter((msg) => msg.chat.id === chatId)
-          .sort((a, b) => b.date - a.date) // 按时间降序排序
-          .slice(0, limit); // 限制返回数量
+          .sort((a, b) => b.date - a.date) // sort by time in descending order
+          .slice(0, limit); // limit the return number
 
         // convert to TelegramMessage format
         const messages = cachedMessages.map((msg) => ({
@@ -220,7 +220,7 @@ function getUserName(msg: any) {
 }
 
 // create a Map to store the corresponding relationship between group name and ID
-const groupCache = new Map<string, number>(); //TODO:进行群组持久化处理
+const groupCache = new Map<string, number>(); //TODO:persist the group cache
 // update the group cache
 function updateGroupCache(chatId: number, chatName: string) {
   if (chatName) {
@@ -276,7 +276,7 @@ function addMessageToCache(msg: any) {
       title: msg.chat.title,
       type: msg.chat.type,
     },
-    date: msg.date || Math.floor(Date.now() / 1000), // 如果 msg.date 未定义，使用当前时间戳
+    date: msg.date || Math.floor(Date.now() / 1000), // if msg.date is undefined, use the current timestamp
     text: msg.text || "",
   };
 
